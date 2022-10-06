@@ -11,7 +11,7 @@ if (collectChannelId === undefined) {
     process.exit(1);
 }
 
-const bot = new Client({
+const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMessages,
@@ -19,7 +19,7 @@ const bot = new Client({
     ],
 });
 
-bot.on("ready", (bot) => {
+client.on("ready", (bot) => {
     console.info(
         `Logged in as ${bot.user.username} on ${bot.guilds.cache.size} servers.`
     );
@@ -29,8 +29,8 @@ bot.on("ready", (bot) => {
     });
 });
 
-bot.on("messageCreate", async (message) => {
-    if (message.author === bot.user) return;
+client.on("messageCreate", async (message) => {
+    if (message.author === client.user) return;
     if (message.channel.id === collectChannelId) return;
     if (
         message.content === "" &&
@@ -47,7 +47,7 @@ bot.on("messageCreate", async (message) => {
     try {
         const webhooks = await collectChannel.fetchWebhooks();
         const webhook =
-            webhooks.find((wh) => wh.owner === bot.user) ||
+            webhooks.find((wh) => wh.owner === client.user) ||
             (await collectChannel.createWebhook({ name: "chat-collector" }));
 
         await webhook.send({
@@ -63,4 +63,4 @@ bot.on("messageCreate", async (message) => {
     }
 });
 
-bot.login(botToken);
+client.login(botToken);
