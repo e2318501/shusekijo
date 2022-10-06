@@ -32,12 +32,22 @@ client.on("ready", (bot) => {
 client.on("messageCreate", async (message) => {
     if (message.author === client.user) return;
     if (message.channel.id === collectChannelId) return;
-    if (
+
+    const isEmpty = () =>
         message.content === "" &&
         message.embeds.length === 0 &&
-        message.attachments.size === 0
-    )
-        return;
+        message.attachments.size === 0;
+
+    let timeout = false;
+    setTimeout(() => {
+        timeout = true;
+    }, 1000);
+
+    while (isEmpty() && !timeout) {
+        await new Promise((r) => setTimeout(r, 10));
+    }
+
+    if (isEmpty()) return;
 
     const collectChannel = message.guild?.channels.cache.get(collectChannelId);
     if (collectChannel === undefined) return;
