@@ -1,4 +1,4 @@
-import { Client, Intents, TextChannel } from "discord.js";
+import { Client, GatewayIntentBits, TextChannel } from "discord.js";
 import * as dotenv from "dotenv";
 
 dotenv.config();
@@ -13,10 +13,9 @@ if (collectChannelId === undefined) {
 
 const bot = new Client({
     intents: [
-        Intents.FLAGS.GUILDS,
-        Intents.FLAGS.GUILD_MESSAGES,
-        Intents.FLAGS.GUILD_MEMBERS,
-        Intents.FLAGS.GUILD_WEBHOOKS,
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.MessageContent,
     ],
 });
 
@@ -31,10 +30,8 @@ bot.on("ready", (bot) => {
 });
 
 bot.on("messageCreate", async (message) => {
-    if (message.channel.type === "DM") return;
     if (message.author === bot.user) return;
     if (message.channel.id === collectChannelId) return;
-
     if (
         message.content === "" &&
         message.embeds.length === 0 &&
@@ -51,7 +48,7 @@ bot.on("messageCreate", async (message) => {
         const webhooks = await collectChannel.fetchWebhooks();
         const webhook =
             webhooks.find((wh) => wh.owner === bot.user) ||
-            (await collectChannel.createWebhook("chat-collector"));
+            (await collectChannel.createWebhook({ name: "chat-collector" }));
 
         await webhook.send({
             content: message.content === "" ? undefined : message.content,
