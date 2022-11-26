@@ -54,23 +54,21 @@ client.on("messageCreate", async (message) => {
 
     if (!(collectChannel instanceof TextChannel)) return;
 
-    try {
-        const webhooks = await collectChannel.fetchWebhooks();
-        const webhook =
-            webhooks.find((wh) => wh.owner === client.user) ||
-            (await collectChannel.createWebhook({ name: "chat-collector" }));
+    const webhooks = await collectChannel.fetchWebhooks();
+    const webhook =
+        webhooks.find((wh) => wh.owner === client.user) ||
+        (await collectChannel.createWebhook({ name: "chat-collector" }));
 
-        await webhook.send({
-            content: message.content === "" ? undefined : message.content,
-            username: message.member?.displayName,
-            avatarURL: message.member?.displayAvatarURL(),
-            embeds: message.embeds,
-            files: Array.from(message.attachments.values()),
-            allowedMentions: { repliedUser: false },
-        });
-    } catch (error) {
-        console.error(error);
-    }
+    await webhook.send({
+        content: message.content,
+        username: message.member?.displayName,
+        avatarURL: message.member?.displayAvatarURL(),
+        embeds: message.embeds,
+        files: Array.from(message.attachments.values()),
+        allowedMentions: { repliedUser: false },
+    });
 });
+
+client.on("error", console.error);
 
 client.login(botToken);
