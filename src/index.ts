@@ -24,7 +24,7 @@ client.on("ready", (bot) => {
         `Logged in as ${bot.user.username} on ${bot.guilds.cache.size} servers.`
     );
     bot.user.setPresence({
-        activities: [{ name: "chat-collector" }],
+        activities: [{ name: "shusekijo" }],
         status: "online",
     });
 });
@@ -57,7 +57,7 @@ client.on("messageCreate", async (message) => {
     const webhooks = await collectChannel.fetchWebhooks();
     const webhook =
         webhooks.find((wh) => wh.owner === client.user) ||
-        (await collectChannel.createWebhook({ name: "chat-collector" }));
+        (await collectChannel.createWebhook({ name: "shusekijo" }));
 
     await webhook.send({
         content: message.content,
