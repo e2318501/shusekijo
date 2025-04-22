@@ -16,7 +16,7 @@ version: "3.8"
 
 services:
   app:
-    build: https://github.com/nutchinet/shusekijo.git
+    build: https://github.com/e2318501/shusekijo.git
     environment:
       - BOT_TOKEN
       - COLLECT_CHANNEL_ID
